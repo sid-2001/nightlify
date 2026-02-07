@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const token = process.env.PAYMENT_AUTH_TOKEN;
+  const token = '504be3cb1270cd7c0229fd53671ff87a69003'
 
   if (!token) {
     return NextResponse.json(
@@ -17,12 +17,17 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        // 'api_key':token,
+        // 'Cookie': 'PHPSESSID=f36bf9a0617be55b4d0e658f1c25ca47'
       },
       body: JSON.stringify(body)
     }
   );
 
+
+
   const data = await response.json();
+  console.log("bhai data aa gya",data)
   return NextResponse.json(data);
 }
