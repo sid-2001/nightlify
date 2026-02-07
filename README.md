@@ -31,6 +31,10 @@ Nightfly is a Next.js app for club bookings with OTP login, club slot booking, o
 - `OTP_API_KEY`: API key for the OTP SMS endpoint.
 - `PAYMENT_AUTH_TOKEN`: Bearer token for the payment endpoints.
 - `NEXT_PUBLIC_UPI_ID`: Public UPI ID shown on the payment screen.
+- `JWT_SECRET`: Secret used to sign JWT tokens.
+
+## Notes
+- MongoDB is required for clubs, users, managers, and orders to load.
 
 ## Notes
 - Orders are saved to MongoDB when `MONGODB_URI` is configured; otherwise they are stored in memory for demo use.

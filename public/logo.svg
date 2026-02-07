@@ -1,0 +1,9 @@
+<svg width="180" height="48" viewBox="0 0 180 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="48" rx="16" fill="#141414" stroke="#F5C542" stroke-width="2"/>
+  <circle cx="32" cy="24" r="12" fill="#F5C542"/>
+  <circle cx="32" cy="24" r="6" fill="#0B0B0B"/>
+  <path d="M48 16H96" stroke="#F5C542" stroke-width="2" stroke-linecap="round"/>
+  <path d="M48 24H112" stroke="#F5C542" stroke-width="2" stroke-linecap="round"/>
+  <path d="M48 32H88" stroke="#F5C542" stroke-width="2" stroke-linecap="round"/>
+  <text x="120" y="30" font-family="Inter, Arial, sans-serif" font-size="16" fill="#F5C542" font-weight="700">Nightfly</text>
+</svg>

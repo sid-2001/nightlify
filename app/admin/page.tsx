@@ -23,6 +23,7 @@ export default function AdminPage() {
 
   const loadOrders = async () => {
     try {
+  
       const response = await fetch('/api/orders');
       if (response.ok) {
         const data = await response.json();
