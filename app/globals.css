@@ -1,0 +1,270 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b0b0b;
+  --card: #141414;
+  --accent: #f5c542;
+  --accent-light: #ffe08a;
+  --text: #fef8e7;
+  --muted: #b7b2a3;
+  --success: #38d98a;
+  --warning: #f5c542;
+  --danger: #f06a6a;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #1b1b1b, var(--bg));
+  color: var(--text);
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main {
+  padding: 32px;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.app-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.logo img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(245, 197, 66, 0.2);
+}
+
+.button {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  background: var(--accent);
+  color: #1b1b1b;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 12px 25px rgba(245, 197, 66, 0.25);
+}
+
+.button.secondary {
+  background: transparent;
+  border: 1px solid var(--accent-light);
+  color: var(--accent-light);
+}
+
+.button.ghost {
+  background: transparent;
+  border: 1px solid rgba(245, 197, 66, 0.35);
+  color: var(--text);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.input,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(245, 197, 66, 0.2);
+  background: #0f0f0f;
+  color: var(--text);
+}
+
+.label {
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: rgba(245, 197, 66, 0.15);
+  color: var(--accent-light);
+}
+
+.status-success {
+  color: var(--success);
+}
+
+.status-warning {
+  color: var(--warning);
+}
+
+.status-danger {
+  color: var(--danger);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.topbar-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search {
+  flex: 1;
+  max-width: 400px;
+}
+
+.menu {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.club-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.club-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.modal {
+  width: min(700px, 100%);
+  background: #0f0f0f;
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid rgba(245, 197, 66, 0.25);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cart-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cart-row:last-child {
+  border-bottom: none;
+}
+
+.notice {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(245, 197, 66, 0.08);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  main {
+    padding: 20px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .topbar-right {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .menu {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: 16px;
+  }
+
+  .logo img {
+    height: 40px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal {
+    padding: 18px;
+  }
+
+  .guest-grid {
+    grid-template-columns: 1fr;
+  }
+}
