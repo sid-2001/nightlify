@@ -1,17 +1,16 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongodb';
 
-export async function GET(request: Request) {
-  const db = await getDb();
-  const { searchParams } = new URL(request.url);
-  const mobile = searchParams.get('mobile');
+const memoryUsers: Array<Record<string, unknown>> = [];
 
-  if (!mobile) {
-    return NextResponse.json({ error: 'mobile is required' }, { status: 400 });
+export async function GET() {
+  const db = await getDb();
+  if (db) {
+    const users = await db.collection('users').find({}).toArray();
+    return NextResponse.json(users);
   }
 
-  const user = await db.collection('users').findOne({ mobile });
-  return NextResponse.json(user ?? {});
+  return NextResponse.json(memoryUsers);
 }
 
 export async function POST(request: Request) {
@@ -23,10 +22,11 @@ export async function POST(request: Request) {
     createdAt: new Date().toISOString()
   };
 
-  await db.collection('users').updateOne(
-    { mobile: user.mobile },
-    { $set: userWithMeta },
-    { upsert: true }
-  );
+  if (db) {
+    await db.collection('users').insertOne(userWithMeta);
+    return NextResponse.json(userWithMeta, { status: 201 });
+  }
+
+  memoryUsers.push(userWithMeta);
   return NextResponse.json(userWithMeta, { status: 201 });
 }

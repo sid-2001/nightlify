@@ -35,4 +35,7 @@ Nightfly is a Next.js app for club bookings with OTP login, club slot booking, o
 
 ## Notes
 - MongoDB is required for clubs, users, managers, and orders to load.
+
+## Notes
+- Orders are saved to MongoDB when `MONGODB_URI` is configured; otherwise they are stored in memory for demo use.
 - Use the `/admin` route to manage orders and assign managers.

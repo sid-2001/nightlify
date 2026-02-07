@@ -1,19 +1,16 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongodb';
 
-export async function GET(request: Request) {
-  const db = await getDb();
-  const { searchParams } = new URL(request.url);
-  const mobile = searchParams.get('mobile');
-  const all = searchParams.get('all');
+const memoryOrders: Array<Record<string, unknown>> = [];
 
-  if (all !== 'true' && !mobile) {
-    return NextResponse.json({ error: 'mobile is required' }, { status: 400 });
+export async function GET() {
+  const db = await getDb();
+  if (db) {
+    const orders = await db.collection('orders').find({}).toArray();
+    return NextResponse.json(orders);
   }
 
-  const filter = all === 'true' ? {} : { mobile };
-  const orders = await db.collection('orders').find(filter).toArray();
-  return NextResponse.json(orders);
+  return NextResponse.json(memoryOrders);
 }
 
 export async function POST(request: Request) {
@@ -25,18 +22,35 @@ export async function POST(request: Request) {
     createdAt: new Date().toISOString()
   };
 
-  await db.collection('orders').insertOne(orderWithMeta);
+  if (db) {
+    await db.collection('orders').insertOne(orderWithMeta);
+    return NextResponse.json(orderWithMeta, { status: 201 });
+  }
+
+  memoryOrders.push(orderWithMeta);
   return NextResponse.json(orderWithMeta, { status: 201 });
 }
 
 export async function PATCH(request: Request) {
-  const { id, status, manager, paymentStatus } = await request.json();
+  const { id, status, manager } = await request.json();
   const db = await getDb();
 
-  await db.collection('orders').updateOne(
-    { id },
-    { $set: { status, manager, paymentStatus } }
-  );
-  const updated = await db.collection('orders').findOne({ id });
-  return NextResponse.json(updated ?? {});
+  if (db) {
+    await db.collection('orders').updateOne(
+      { id },
+      { $set: { status, manager } }
+    );
+    const updated = await db.collection('orders').findOne({ id });
+    return NextResponse.json(updated ?? {});
+  }
+
+  const index = memoryOrders.findIndex((order) => order.id === id);
+  if (index !== -1) {
+    memoryOrders[index] = {
+      ...memoryOrders[index],
+      status,
+      manager
+    };
+  }
+  return NextResponse.json(memoryOrders[index] ?? {});
 }

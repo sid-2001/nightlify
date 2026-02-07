@@ -24,6 +24,12 @@ type Club = {
   vibe: string;
 };
 
+const defaultClubs: Club[] = [
+  { id: 'club-1', name: 'Nova Lounge', location: 'Bandra, Mumbai', vibe: 'EDM Nights' },
+  { id: 'club-2', name: 'Skyline Social', location: 'Gurugram', vibe: 'Rooftop Beats' },
+  { id: 'club-3', name: 'Velvet Room', location: 'Indiranagar, Bengaluru', vibe: 'Ladies Night' }
+];
+
 const bookingOptions: BookingOption[] = [
   { type: 'Single Girls', price: 0, caption: 'Girls (Free)' },
   { type: 'Boys', price: 1000, caption: 'Boys - ₹1000 (Redeemable coupon)' },
@@ -33,7 +39,7 @@ const bookingOptions: BookingOption[] = [
 export default function ClubsPage() {
   const router = useRouter();
   const [search, setSearch] = useState('');
-  const [clubs, setClubs] = useState<Club[]>([]);
+  const [clubs, setClubs] = useState<Club[]>(defaultClubs);
   const [selectedClub, setSelectedClub] = useState<Club | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedOption, setSelectedOption] = useState<BookingOption | null>(null);
@@ -43,8 +49,7 @@ export default function ClubsPage() {
   const [utr, setUtr] = useState('');
   const [paymentStatus, setPaymentStatus] = useState('');
   const [isChecking, setIsChecking] = useState(false);
-  const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
-  const upiId = process.env.NEXT_PUBLIC_UPI_ID ?? '';
+  const upiId = process.env.NEXT_PUBLIC_UPI_ID ?? 'nightfly@upi';
 
   useEffect(() => {
     const loadClubs = async () => {
@@ -52,12 +57,12 @@ export default function ClubsPage() {
         const response = await fetch('/api/clubs');
         if (response.ok) {
           const data = await response.json();
-          if (Array.isArray(data)) {
+          if (Array.isArray(data) && data.length > 0) {
             setClubs(data);
           }
         }
       } catch (error) {
-        // ignore
+        // fallback to default
       }
     };
     loadClubs();
@@ -123,8 +128,11 @@ export default function ClubsPage() {
       mobile
     };
 
+    const existing = JSON.parse(
+      localStorage.getItem('nightfly_orders') ?? '[]'
+    );
+    localStorage.setItem('nightfly_orders', JSON.stringify([order, ...existing]));
     await saveOrder(order);
-    setActiveOrderId(id);
 
     if (total > 0) {
       const response = await fetch('/api/payment/create', {
@@ -193,13 +201,13 @@ export default function ClubsPage() {
     }, 10000);
   };
 
-  const updateOrderStatus = async (status: string) => {
-    if (!activeOrderId) return;
-    await fetch('/api/orders', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: activeOrderId, paymentStatus: status })
-    });
+  const updateOrderStatus = (status: string) => {
+    const orders = JSON.parse(
+      localStorage.getItem('nightfly_orders') ?? '[]'
+    );
+    if (!orders.length) return;
+    orders[0].paymentStatus = status;
+    localStorage.setItem('nightfly_orders', JSON.stringify(orders));
   };
 
   return (
@@ -338,11 +346,9 @@ export default function ClubsPage() {
               </div>
 
               <div style={{ display: 'grid', gap: 12 }}>
-                {upiId && (
-                  <div className="notice">
-                    Pay using UPI ID: <strong>{upiId}</strong>
-                  </div>
-                )}
+                <div className="notice">
+                  Pay using UPI ID: <strong>{upiId}</strong>
+                </div>
                 <label className="label">Enter UTR to verify payment</label>
                 <input
                   className="input"

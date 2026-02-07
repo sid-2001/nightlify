@@ -13,23 +13,11 @@ export default function ProfilePage() {
   const [mobile, setMobile] = useState('');
 
   useEffect(() => {
-    const loadProfile = async () => {
-      const savedMobile = localStorage.getItem('nightfly_mobile') ?? '';
-      setMobile(savedMobile);
-      if (!savedMobile) return;
-      try {
-        const response = await fetch(`/api/users?mobile=${savedMobile}`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data?.name) {
-            setProfile(data);
-          }
-        }
-      } catch (error) {
-        // ignore
-      }
-    };
-    loadProfile();
+    const stored = localStorage.getItem('nightfly_profile');
+    if (stored) {
+      setProfile(JSON.parse(stored));
+    }
+    setMobile(localStorage.getItem('nightfly_mobile') ?? '');
   }, []);
 
   return (

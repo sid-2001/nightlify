@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -9,21 +9,11 @@ export default function LoginPage() {
   const [otp, setOtp] = useState('');
   const [sentOtp, setSentOtp] = useState('');
   const [status, setStatus] = useState('');
-  const [resendTimer, setResendTimer] = useState(60);
-
-  useEffect(() => {
-    if (resendTimer <= 0) return;
-    const timer = setInterval(() => {
-      setResendTimer((value) => value - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [resendTimer]);
 
   const sendOtp = async () => {
     const generatedOtp = `${Math.floor(100000 + Math.random() * 900000)}`;
     setSentOtp(generatedOtp);
     setStatus('Sending OTP...');
-    setResendTimer(60);
 
     try {
       const response = await fetch('/api/otp', {
@@ -44,27 +34,14 @@ export default function LoginPage() {
     }
   };
 
-  const verifyOtp = async () => {
+  const verifyOtp = () => {
     if (!otp || otp !== sentOtp) {
       setStatus('OTP does not match.');
       return;
     }
 
-    try {
-      const response = await fetch('/api/auth/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile })
-      });
-      if (!response.ok) {
-        setStatus('Unable to verify OTP.');
-        return;
-      }
-      localStorage.setItem('nightfly_mobile', mobile);
-      router.push('/details');
-    } catch (error) {
-      setStatus('Unable to verify OTP.');
-    }
+    localStorage.setItem('nightfly_mobile', mobile);
+    router.push('/details');
   };
 
   return (
@@ -106,13 +83,6 @@ export default function LoginPage() {
             Verify
           </button>
         </div>
-        <button
-          className="button ghost"
-          onClick={sendOtp}
-          disabled={!mobile || resendTimer > 0}
-        >
-          {resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP'}
-        </button>
       </div>
     </section>
   );

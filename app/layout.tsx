@@ -15,14 +15,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <main>
-          <div className="container">
-            <header className="app-header">
-              <div className="logo">
-                <img src="/logo.svg" alt="Nightfly logo" />
-              </div>
-            </header>
-            {children}
-          </div>
+          <div className="container">{children}</div>
         </main>
       </body>
     </html>

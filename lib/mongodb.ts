@@ -11,7 +11,7 @@ declare global {
 
 export async function getDb() {
   if (!uri) {
-    throw new Error('Missing MONGODB_URI in environment');
+    return null;
   }
 
   if (!clientPromise) {
@@ -25,6 +25,10 @@ export async function getDb() {
       client = new MongoClient(uri);
       clientPromise = client.connect();
     }
+  }
+
+  if (!clientPromise) {
+    return null;
   }
 
   const connectedClient = await clientPromise;

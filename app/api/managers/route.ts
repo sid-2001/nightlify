@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongodb';
 
+const memoryManagers: Array<Record<string, unknown>> = [];
+
 export async function GET() {
   const db = await getDb();
-  const managers = await db.collection('managers').find({}).toArray();
-  return NextResponse.json(managers);
+  if (db) {
+    const managers = await db.collection('managers').find({}).toArray();
+    return NextResponse.json(managers);
+  }
+
+  return NextResponse.json(memoryManagers);
 }
 
 export async function POST(request: Request) {
@@ -16,6 +22,11 @@ export async function POST(request: Request) {
     createdAt: new Date().toISOString()
   };
 
-  await db.collection('managers').insertOne(managerWithMeta);
+  if (db) {
+    await db.collection('managers').insertOne(managerWithMeta);
+    return NextResponse.json(managerWithMeta, { status: 201 });
+  }
+
+  memoryManagers.push(managerWithMeta);
   return NextResponse.json(managerWithMeta, { status: 201 });
 }

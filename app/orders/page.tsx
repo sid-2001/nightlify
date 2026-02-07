@@ -17,12 +17,16 @@ export default function OrdersPage() {
   const [status, setStatus] = useState('');
 
   const loadOrders = async () => {
+    const localOrders = JSON.parse(
+      localStorage.getItem('nightfly_orders') ?? '[]'
+    );
+    setOrders(localOrders);
+
     try {
-      const mobile = localStorage.getItem('nightfly_mobile') ?? '';
-      const response = await fetch(`/api/orders?mobile=${mobile}`);
+      const response = await fetch('/api/orders');
       if (response.ok) {
         const data = await response.json();
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setOrders(data);
         }
       }

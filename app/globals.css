@@ -39,19 +39,6 @@ main {
   margin: 0 auto;
 }
 
-.app-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.logo img {
-  height: 48px;
-  width: auto;
-  display: block;
-}
-
 .card {
   background: var(--card);
   border-radius: 16px;
@@ -245,10 +232,6 @@ select {
 @media (max-width: 600px) {
   main {
     padding: 16px;
-  }
-
-  .logo img {
-    height: 40px;
   }
 
   .card {
