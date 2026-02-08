@@ -39,9 +39,14 @@ const router = useRouter();
       if (response.ok) {
         const serverOrders = await response.json();
         // Merge server orders with local orders, preferring server data
-        const allOrders = [...serverOrders, ...localOrders.filter(local => 
-          !serverOrders.some(server => server.id === local.id)
+        const allOrders = [...serverOrders, ...localOrders.filter(
+          //@ts-ignore
+          local => 
+          !serverOrders.some(
+            //@ts-ignore
+            server => server.id === local.id)
         )];
+
         setOrders(allOrders);
       } else {
         // Fallback to local orders

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/mongodb';
+import { getDb } from '../../../lib/mongodb';
 
 const memoryOrders: Array<Record<string, unknown>> = [];
 
