@@ -26,10 +26,10 @@ export async function GET() {
   const db = await getDb();
   if (db) {
     const clubs = await db.collection('clubs').find({}).toArray();
-    return NextResponse.json(clubs.length ? clubs : memoryClubs);
+    return NextResponse.json(clubs.length ? clubs : []);
   }
 
-  return NextResponse.json(memoryClubs);
+  return NextResponse.json([]);
 }
 
 export async function POST(request: Request) {

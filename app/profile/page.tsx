@@ -1,5 +1,6 @@
 'use client';
 
+import router from 'next/router';
 import { useEffect, useState } from 'react';
 
 type Profile = {
@@ -13,6 +14,12 @@ export default function ProfilePage() {
   const [mobile, setMobile] = useState('');
 
   useEffect(() => {
+
+     const token = localStorage.getItem('nightfly_token');
+
+    if (!token) {
+      router.replace('/');
+    }
     const stored = localStorage.getItem('nightfly_profile');
     if (stored) {
       setProfile(JSON.parse(stored));
